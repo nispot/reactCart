@@ -1,37 +1,42 @@
 import React, { Component } from "react";
+import './form.css';
 
 //Componentes Funcionales
 const Contador = props => {
   return (
-    <div>
+    <div className="inline" >
       <h1>{props.valor}</h1>
     </div>
   );
 };
 const UltimoClick = props => {
   return (
-    <div>
+    <div class="last">
       <h2>{props.fechahora}</h2>
     </div>
   );
 };
 const Button = props => {
   return (
-    <button onClick={() => props.onClick()}> {props.label}</button>
+    <button className="inline" onClick={() => props.onClick()}> {props.label}</button>
   );
 };
 
 //States y Props
-class Form extends React.Component {
+class Form extends Component {
   constructor(props) {
     super(props);
     this.state = {
       contador: 0,
       fechahora: 'Nunca se ha hecho click'
     };
+    this.max = 10;
+    this.min = 0;
   }
-  onClickHandler() {
 
+
+  
+    getDate() {
     let currentdate = new Date();
     let datetime = "Último click: " + currentdate.getDate() + "/"
       + (currentdate.getMonth() + 1) + "/"
@@ -39,18 +44,46 @@ class Form extends React.Component {
       + currentdate.getHours() + ":"
       + currentdate.getMinutes() + ":"
       + currentdate.getSeconds();
-
-    this.setState({
-      contador: this.state.contador + 1,
-      fechahora: datetime
-    });
+      return datetime;
   }
+
+  addHandler() {
+    let datetime = this.getDate();
+    if ( this.state.contador < this.max ) {
+      this.setState({
+        contador: this.state.contador + 1,
+        fechahora: datetime
+      });
+    } else {
+      alert ("La cantidad no puede ser mayor a 10.");
+      this.setState({
+        fechahora: datetime
+      });
+    }
+  }
+
+  removeHandler() {
+    let datetime = this.getDate();
+    if ( this.state.contador > this.min ) {
+      this.setState({
+          contador: this.state.contador - 1,
+          fechahora: datetime
+      });
+    } else {
+      alert ("La cantidad no puede ser menor a 0.");
+      this.setState({
+        fechahora: datetime
+      });
+    }
+  }
+
   render() {
     return (
-      <div>
+      <div class="form">
+        <Button label="-" onClick={() => this.removeHandler()} />
         <Contador valor={this.state.contador} />
+        <Button label="+" onClick={() => this.addHandler()} />
         <UltimoClick fechahora={this.state.fechahora} />
-        <Button label="Aumentar Contador" onClick={() => this.onClickHandler()} />
       </div>
     )
   }
